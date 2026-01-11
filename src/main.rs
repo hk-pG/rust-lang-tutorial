@@ -1,77 +1,38 @@
-use fib::nth_fibonacci;
-use std::io;
-
 fn main() {
-    // read user input 'number'
-    let mut buf = String::new();
-
-    io::stdin()
-        .read_line(&mut buf)
-        .expect("Failed to read line");
-
-    // expected unsigned number
-    let number = buf.trim().parse::<u32>().unwrap();
-
-    let result = match nth_fibonacci(number) {
-        Ok(fib_num) => fib_num,
-        Err(error_message) => {
-            panic!("{}", error_message);
-        }
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
     };
+    let rect2 = Rectangle {
+        width: 10,
+        height: 40,
+    };
+    let rect3 = Rectangle::square(30);
 
-    println!("nth fibonacci number: {}", result);
+    println!("rect1 is {:?}. area is {}", rect1, rect1.area());
+    println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+    println!("Can rect1 hold rect3? {}", rect1.can_hold(&rect3));
 }
 
-/// vec apiの使い方のおべんきょう
-mod learn_vec {
-    /// シンプルなインデックスアクセス
-    pub fn basic_indexes() {
-        let vec = [1, 2, 3];
-        // print using index accesses
-        println!("{}, {}, {}", vec[0], vec[1], vec[2]);
+#[derive(Debug)]
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
     }
 
-    /// イテレータと集計関数
-    pub fn iterate_collect() {
-        let vec = vec![4, 5, 6];
-
-        let pow_vec: Vec<u32> = vec.into_iter().map(|x| x * x).collect();
-
-        println!("{:?}", pow_vec);
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
     }
 
-    pub fn iterate_loop() {
-        let vec = [7, 8, 9];
-        for elem in vec.iter() {
-            println!("{}", elem);
+    fn square(size: u32) -> Rectangle {
+        Rectangle {
+            width: size,
+            height: size,
         }
-    }
-
-    pub fn use_slice() {
-        let vec = [10, 11, 12, 13, 14, 15];
-        let slice = &vec[1..4];
-
-        println!("vec            : {:?}", vec);
-        println!("slice[1..4]    : {:?}", slice);
-    }
-
-    #[test]
-    pub fn test_vec() {
-        basic_indexes();
-    }
-
-    #[test]
-    pub fn test_vec_collect() {
-        iterate_collect();
-    }
-
-    #[test]
-    pub fn test_vec_loop() {
-        iterate_loop();
-    }
-
-    #[test]
-    pub fn test_vec_slice() {
-        use_slice();
     }
 }
